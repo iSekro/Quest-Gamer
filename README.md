@@ -1,71 +1,99 @@
-# GamerRank — Competitive Gaming Trivia Platform
+# Quest Gamer
 
-GamerRank es una aplicación web competitiva tipo ranked para medir conocimiento gamer mediante trivia de alta velocidad, rangos, temporadas, ranking mundial, banco masivo de preguntas y sistema anti-cheat.
+Juego de trivia gamer con estética retro 8-bit.
 
-## Objetivo del MVP
+## Estado actual
 
-Crear una versión jugable donde un usuario pueda:
+La primera versión jugable incluye:
 
-1. Entrar a la web.
-2. Jugar una partida ranked de 20 preguntas.
-3. Recibir score, precisión, tiempo promedio y resultado.
-4. Ganar o perder LP.
-5. Ver su rango.
-6. Aparecer en un leaderboard de temporada.
-7. Evitar preguntas repetidas gracias a `question_id` y `fact_id`.
+- Interfaz básica tipo ventana de juego antiguo.
+- Preguntas con exactamente 4 alternativas.
+- Solo 1 alternativa correcta por pregunta.
+- Feedback inmediato al responder.
+- Score básico de +100 por respuesta correcta.
+- Tests automatizados para validar el motor de preguntas.
 
-## Stack recomendado
+## Stack
 
-- Next.js App Router
+- Vite
+- React
 - TypeScript
-- Tailwind CSS
-- shadcn/ui
-- Framer Motion
-- Prisma ORM
-- PostgreSQL
-- Supabase/Auth o NextAuth
-- Vercel
-- Upstash Redis, opcional para ranking rápido y rate limit
+- Vitest
+- Testing Library
 
-## Cómo usar este starter
-
-Este paquete no reemplaza `create-next-app`; funciona como estructura profesional inicial para pegar dentro de tu repo real.
-
-### Ruta recomendada
+## Instalar
 
 ```powershell
-cd C:\proyectos
-npx create-next-app@latest gamerrank-web --typescript --tailwind --eslint --app --src-dir
-cd gamerrank-web
+npm install
 ```
 
-Después copia el contenido de este starter dentro de `gamerrank-web`.
-
-Instala dependencias sugeridas:
+## Correr en desarrollo
 
 ```powershell
-npm install @prisma/client prisma framer-motion lucide-react zod jose
-npx shadcn@latest init
-npx shadcn@latest add button card badge progress tabs table input dialog dropdown-menu avatar separator
-```
-
-Configura Prisma:
-
-```powershell
-npx prisma init
-npx prisma migrate dev --name init
-npx prisma db seed
 npm run dev
 ```
 
-## Flujo de trabajo recomendado
+Luego abre la URL que indique Vite, normalmente:
 
-1. Modifica `docs/`.
-2. Dale a Codex una tarea pequeña de `prompts/codex/`.
-3. Ejecuta `npm run lint`, `npm run build` y tests.
-4. Si falla, pega el error completo a ChatGPT.
-5. Haz commit cuando funcione.
+```text
+http://localhost:5173
+```
 
-## Regla central
+## Ejecutar tests
 
-ChatGPT diseña y ordena. Codex implementa. Tú pruebas.
+```powershell
+npm test
+```
+
+## Build de producción
+
+```powershell
+npm run build
+```
+
+## Estructura principal
+
+```text
+src/
+├── App.tsx
+├── main.tsx
+├── styles.css
+├── data/
+│   └── questions.ts
+├── lib/
+│   ├── quizEngine.ts
+│   └── quizEngine.test.ts
+└── test/
+    └── setup.ts
+```
+
+## Regla de preguntas
+
+Cada pregunta debe cumplir:
+
+```ts
+{
+  id: string;
+  category: string;
+  text: string;
+  options: [4 alternativas únicas];
+  correctOptionId: string; // debe existir dentro de options
+  explanation: string;
+}
+```
+
+El motor valida que:
+
+1. Existan exactamente 4 alternativas.
+2. Los IDs de alternativas sean únicos.
+3. Los textos de alternativas sean únicos.
+4. La respuesta correcta exista dentro de las alternativas.
+
+## Próximos pasos sugeridos
+
+1. Agregar temporizador por pregunta.
+2. Crear pantalla de inicio.
+3. Cargar preguntas desde JSON/CSV.
+4. Agregar rangos estilo competitivo.
+5. Guardar historial de partidas.
+6. Crear leaderboard.
