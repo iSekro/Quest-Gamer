@@ -1,9 +1,11 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { sampleQuestions } from './data/questions';
 import { answerQuestion, calculateScore, getNextQuestionIndex, validateQuestionBank } from './lib/quizEngine';
 import './styles.css';
 
 type GameState = 'playing' | 'finished';
+
+const QUESTION_TIME_SECONDS = 10;
 
 export default function App() {
   const questions = useMemo(() => {
@@ -17,15 +19,39 @@ export default function App() {
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<string>('Elige una alternativa para comenzar.');
   const [gameState, setGameState] = useState<GameState>('playing');
+  const [timeLeft, setTimeLeft] = useState(QUESTION_TIME_SECONDS);
+  const [isQuestionLocked, setIsQuestionLocked] = useState(false);
 
   const currentQuestion = questions[currentQuestionIndex];
   const progress = `${currentQuestionIndex + 1}/${questions.length}`;
+  const isTimerDanger = timeLeft <= 3;
+
+  useEffect(() => {
+    if (gameState !== 'playing' || isQuestionLocked) return;
+
+    const timerId = window.setInterval(() => {
+      setTimeLeft((currentTime) => {
+        if (currentTime <= 1) {
+          window.clearInterval(timerId);
+          setIsQuestionLocked(true);
+          setSelectedOptionId(null);
+          setFeedback('TIEMPO AGOTADO — No sumas puntos en esta pregunta.');
+          return 0;
+        }
+
+        return currentTime - 1;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(timerId);
+  }, [currentQuestionIndex, gameState, isQuestionLocked]);
 
   function handleAnswer(optionId: string) {
-    if (selectedOptionId || gameState === 'finished') return;
+    if (isQuestionLocked || gameState === 'finished') return;
 
     const result = answerQuestion(currentQuestion, optionId);
     setSelectedOptionId(optionId);
+    setIsQuestionLocked(true);
     setScore((previousScore) => calculateScore(previousScore, result));
 
     if (result.isCorrect) {
@@ -48,6 +74,8 @@ export default function App() {
 
     setCurrentQuestionIndex(nextIndex);
     setSelectedOptionId(null);
+    setIsQuestionLocked(false);
+    setTimeLeft(QUESTION_TIME_SECONDS);
     setFeedback('Elige una alternativa.');
   }
 
@@ -56,6 +84,8 @@ export default function App() {
     setScore(0);
     setCorrectAnswers(0);
     setSelectedOptionId(null);
+    setIsQuestionLocked(false);
+    setTimeLeft(QUESTION_TIME_SECONDS);
     setFeedback('Elige una alternativa para comenzar.');
     setGameState('playing');
   }
@@ -83,6 +113,10 @@ export default function App() {
               <span className="hud-label">ACIERTOS</span>
               <strong>{correctAnswers}</strong>
             </div>
+            <div>
+              <span className="hud-label">TIEMPO</span>
+              <strong className={isTimerDanger ? 'timer-danger' : ''}>{timeLeft}s</strong>
+            </div>
           </div>
 
           {gameState === 'playing' ? (
@@ -95,7 +129,7 @@ export default function App() {
               <div className="options-grid" role="list" aria-label="Alternativas de respuesta">
                 {currentQuestion.options.map((option, index) => {
                   const isSelected = selectedOptionId === option.id;
-                  const isCorrect = selectedOptionId !== null && option.id === currentQuestion.correctOptionId;
+                  const shouldRevealCorrect = isQuestionLocked && option.id === currentQuestion.correctOptionId;
                   const isWrong = isSelected && option.id !== currentQuestion.correctOptionId;
 
                   return (
@@ -103,11 +137,11 @@ export default function App() {
                       key={option.id}
                       className={[
                         'answer-button',
-                        isCorrect ? 'answer-button--correct' : '',
+                        shouldRevealCorrect ? 'answer-button--correct' : '',
                         isWrong ? 'answer-button--wrong' : '',
                       ].join(' ')}
                       onClick={() => handleAnswer(option.id)}
-                      disabled={selectedOptionId !== null}
+                      disabled={isQuestionLocked}
                     >
                       <span className="answer-key">{String.fromCharCode(65 + index)}</span>
                       <span>{option.text}</span>
@@ -118,7 +152,7 @@ export default function App() {
 
               <div className="feedback-box" aria-live="polite">{feedback}</div>
 
-              <button className="next-button" onClick={handleNextQuestion} disabled={!selectedOptionId}>
+              <button className="next-button" onClick={handleNextQuestion} disabled={!isQuestionLocked}>
                 {currentQuestionIndex + 1 === questions.length ? 'TERMINAR PARTIDA' : 'SIGUIENTE'}
               </button>
             </>
