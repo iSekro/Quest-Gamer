@@ -1,0 +1,53 @@
+[
+  {
+    "category": "Gaming general",
+    "entity": "Super Mario 64",
+    "property": "release_year",
+    "value": "1996",
+    "questionText": "¿En qué año fue lanzado originalmente Super Mario 64?",
+    "answerOptions": [
+      "1994",
+      "1996",
+      "1998",
+      "2001"
+    ],
+    "correctAnswer": "1996",
+    "difficulty": "EASY",
+    "explanation": "Super Mario 64 fue lanzado originalmente en 1996 para Nintendo 64.",
+    "source": "Seed interno de desarrollo"
+  },
+  {
+    "category": "PC Gaming",
+    "entity": "Steam",
+    "property": "platform_type",
+    "value": "digital distribution",
+    "questionText": "¿Qué tipo de plataforma es principalmente Steam?",
+    "answerOptions": [
+      "Motor gráfico",
+      "Distribución digital",
+      "Consola portátil",
+      "Sistema operativo"
+    ],
+    "correctAnswer": "Distribución digital",
+    "difficulty": "EASY",
+    "explanation": "Steam es principalmente una plataforma de distribución digital de videojuegos.",
+    "source": "Seed interno de desarrollo"
+  },
+  {
+    "category": "League of Legends",
+    "entity": "Summoner's Rift",
+    "property": "map_type",
+    "value": "main 5v5 map",
+    "questionText": "En League of Legends, ¿qué representa principalmente la Grieta del Invocador?",
+    "answerOptions": [
+      "Mapa principal 5v5",
+      "Modo tutorial",
+      "Mapa de ARAM",
+      "Cliente de recompensas"
+    ],
+    "correctAnswer": "Mapa principal 5v5",
+    "difficulty": "EASY",
+    "explanation": "La Grieta del Invocador es el mapa clásico principal de partidas 5v5.",
+    "source": "Seed interno de desarrollo"
+  }
+]

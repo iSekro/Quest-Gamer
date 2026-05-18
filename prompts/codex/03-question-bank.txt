@@ -1,0 +1,18 @@
+Implementa selección inteligente de preguntas sin repetición.
+
+Requisitos:
+1. Usar Fact y Question.
+2. Evitar questionId vistos recientemente.
+3. Evitar factId vistos recientemente.
+4. Balancear dificultad según MMR.
+5. Balancear categoría/subcategoría.
+6. Si no hay suficientes preguntas frescas, usar las menos recientes.
+7. Nunca repetir dentro del mismo match.
+8. Crear función selectQuestionsForRankedMatch(userId, categoryId, mmr).
+
+Tests:
+- Usuario nuevo.
+- Usuario con muchas preguntas vistas.
+- Categoría con pocas preguntas.
+- Jugador de alto MMR.
+- Evitar repetición de factId.

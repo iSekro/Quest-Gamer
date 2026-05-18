@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: gamerrank-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: gamerrank
+      POSTGRES_PASSWORD: gamerrank_password
+      POSTGRES_DB: gamerrank_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - gamerrank_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  gamerrank_postgres_data:

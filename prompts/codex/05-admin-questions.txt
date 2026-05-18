@@ -1,0 +1,19 @@
+Crea el panel admin de preguntas.
+
+Requisitos:
+1. Página /admin/questions con tabla.
+2. Filtros por categoría, dificultad, estado y texto.
+3. Crear pregunta.
+4. Editar pregunta.
+5. Aprobar/rechazar.
+6. Publicar.
+7. Archivar.
+8. Gestión de facts.
+9. Detector básico de duplicados:
+   - mismo factId
+   - texto similar
+   - misma respuesta correcta con pregunta parecida
+
+Restricciones:
+- Solo PUBLISHED entra a ranked.
+- Mantener UI con shadcn/ui.

@@ -1,0 +1,36 @@
+Genera preguntas para GamerRank siguiendo este formato JSON.
+
+Categoría: [CATEGORÍA]
+Cantidad: [N]
+Dificultad objetivo:
+- EASY: [N]
+- MEDIUM: [N]
+- HARD: [N]
+- INSANE: [N]
+- LEGENDARY: [N]
+
+Reglas:
+- Cada pregunta debe tener 4 alternativas.
+- Solo una respuesta correcta.
+- No preguntas ambiguas.
+- No usar datos de parches recientes sin versión.
+- Incluir explicación breve.
+- Incluir fact base.
+- No usar assets ni imágenes con copyright.
+- Salida estrictamente JSON válido.
+
+Formato:
+[
+  {
+    "category": "League of Legends",
+    "entity": "Summoner's Rift",
+    "property": "map_type",
+    "value": "main 5v5 map",
+    "questionText": "...",
+    "answerOptions": ["...", "...", "...", "..."],
+    "correctAnswer": "...",
+    "difficulty": "EASY",
+    "explanation": "...",
+    "source": "..."
+  }
+]

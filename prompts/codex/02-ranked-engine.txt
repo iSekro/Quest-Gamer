@@ -1,0 +1,33 @@
+Implementa el motor real de partidas ranked.
+
+Requisitos:
+1. POST /api/ranked/start:
+   - Valida usuario.
+   - Obtiene temporada activa.
+   - Crea Match.
+   - Selecciona 20 preguntas publicadas.
+   - Crea la primera MatchQuestion.
+   - Retorna solo pregunta, alternativas y token temporal.
+
+2. POST /api/ranked/answer:
+   - Valida token firmado.
+   - Calcula responseTimeMs con tiempo de servidor.
+   - Valida respuesta contra hash.
+   - Registra resultado.
+   - Crea UserQuestionHistory.
+   - Evalúa anti-cheat.
+   - Retorna feedback y siguiente pregunta.
+
+3. Finalización:
+   - Calcula accuracy.
+   - Calcula score.
+   - Calcula performanceScore.
+   - Actualiza LP/MMR.
+   - Marca Match como COMPLETED o UNDER_REVIEW.
+
+Restricciones:
+- El cliente jamás recibe correctAnswerHash.
+- El cliente no calcula score final.
+- No repetir pregunta dentro del match.
+
+Agrega tests unitarios para funciones puras de ranked y anti-cheat.

@@ -1,0 +1,21 @@
+Implementa anti-cheat competitivo.
+
+Requisitos:
+1. Token temporal firmado por pregunta.
+2. Validación estricta de token.
+3. Tiempos de servidor.
+4. Eventos AntiCheatEvent:
+   - IMPOSSIBLY_FAST_HARD_ANSWER
+   - BOT_LIKE_RESPONSE_TIME
+   - ABNORMAL_ACCURACY
+   - CONSTANT_TIMING_PATTERN
+5. suspiciousScore por match.
+6. Si suspiciousScore >= umbral, Match pasa a UNDER_REVIEW.
+7. Matches UNDER_REVIEW no aparecen en leaderboard top.
+
+Tests:
+- Token expirado.
+- Token inválido.
+- Respuesta fuera de tiempo.
+- Respuesta imposible en pregunta infernal.
+- Match under review excluido del ranking.

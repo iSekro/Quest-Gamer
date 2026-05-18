@@ -1,0 +1,45 @@
+Lee toda la carpeta docs/ y crea la base inicial del proyecto GamerRank.
+
+Contexto:
+GamerRank es una aplicación web competitiva de trivia gamer con rangos, temporadas, ranking mundial, banco masivo de preguntas y anti-cheat.
+
+Stack:
+- Next.js App Router
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- Framer Motion
+- Prisma
+- PostgreSQL
+
+Objetivo:
+Implementar el MVP técnico inicial.
+
+Tareas:
+1. Revisar y adaptar prisma/schema.prisma.
+2. Configurar Prisma Client.
+3. Crear seed funcional.
+4. Crear home dark premium.
+5. Crear rutas:
+   - /
+   - /ranked
+   - /leaderboard
+   - /profile
+   - /admin/questions
+6. Crear endpoints base:
+   - POST /api/ranked/start
+   - POST /api/ranked/answer
+   - GET /api/leaderboard
+7. Mantener código limpio, modular y tipado.
+
+Restricciones:
+- No implementar pagos.
+- No usar logos ni assets protegidos.
+- No enviar respuestas correctas al frontend antes de contestar.
+- No confiar en tiempos enviados por cliente.
+
+Criterios de aceptación:
+- npm run dev funciona.
+- prisma migrate funciona.
+- seed funciona.
+- páginas principales cargan sin error.

@@ -1,0 +1,66 @@
+.env.example
+README.md
+docker-compose.yml
+docs/
+  00-vision.md
+  01-mvp-scope.md
+  02-ranked-system.md
+  03-question-bank.md
+  04-anti-cheat.md
+  05-ui-style.md
+  06-database-model.md
+  07-codex-task-list.md
+  08-content-pipeline.md
+  09-deployment-roadmap.md
+package.template.json
+prisma/
+  schema.prisma
+  seed.ts
+prompts/
+  codex/
+    01-init-mvp.txt
+    02-ranked-engine.txt
+    03-question-bank.txt
+    04-anti-cheat.txt
+    05-admin-questions.txt
+    06-leaderboard.txt
+  content-generation/
+    question-batch-template.txt
+public/
+  brand/
+  mockups/
+seed/
+  sample-questions.json
+src/
+  app/
+    admin/
+      questions/
+        page.tsx
+    api/
+      leaderboard/
+        route.ts
+      ranked/
+        answer/
+          route.ts
+        start/
+          route.ts
+    leaderboard/
+      page.tsx
+    page.tsx
+    profile/
+      page.tsx
+    ranked/
+      page.tsx
+  components/
+    game/
+    layout/
+    ranking/
+    ui/
+  lib/
+    anti-cheat.ts
+    prisma.ts
+    question-selection.ts
+    question-token.ts
+    ranked.ts
+  types/
+    ranked.ts

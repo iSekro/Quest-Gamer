@@ -1,0 +1,20 @@
+Implementa leaderboard de temporada.
+
+Requisitos:
+1. GET /api/leaderboard con filtros:
+   - seasonId
+   - country
+   - categoryId
+2. Mostrar top 100.
+3. Excluir usuarios/matches UNDER_REVIEW, HIDDEN o BANNED.
+4. Página /leaderboard con:
+   - filtros
+   - top 3 destacado
+   - tabla ranking
+   - rango
+   - LP
+   - partidas jugadas
+   - accuracy
+   - verifiedStatus
+
+Agrega tests para filtros y exclusión de sospechosos.

@@ -1,0 +1,259 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RankTier {
+  RECRUIT
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+  DIAMOND
+  MASTER
+  GRANDMASTER
+  CHALLENGER
+  LEGEND
+}
+
+enum Division {
+  IV
+  III
+  II
+  I
+  NONE
+}
+
+enum QuestionDifficulty {
+  EASY
+  MEDIUM
+  HARD
+  INSANE
+  LEGENDARY
+}
+
+enum QuestionStatus {
+  DRAFT
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+  PUBLISHED
+  ARCHIVED
+}
+
+enum MatchStatus {
+  IN_PROGRESS
+  COMPLETED
+  ABANDONED
+  UNDER_REVIEW
+  INVALIDATED
+}
+
+enum VerifiedStatus {
+  NORMAL
+  UNDER_REVIEW
+  VERIFIED
+  HIDDEN
+  BANNED
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String?  @unique
+  username      String   @unique
+  country       String?
+  avatarUrl     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  rankProfiles  PlayerRankProfile[]
+  matches       Match[]
+  histories     UserQuestionHistory[]
+  antiCheatEvents AntiCheatEvent[]
+  leaderboardEntries LeaderboardEntry[]
+}
+
+model Season {
+  id        String   @id @default(cuid())
+  name      String
+  startsAt  DateTime
+  endsAt    DateTime
+  isActive  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  rankProfiles PlayerRankProfile[]
+  matches      Match[]
+  leaderboardEntries LeaderboardEntry[]
+}
+
+model PlayerRankProfile {
+  id          String   @id @default(cuid())
+  userId      String
+  seasonId    String
+  rankTier    RankTier @default(RECRUIT)
+  division    Division @default(IV)
+  lp          Int      @default(0)
+  mmr         Int      @default(1000)
+  peakRank    String?
+  gamesPlayed Int      @default(0)
+  integrityScore Int   @default(100)
+  verifiedStatus VerifiedStatus @default(NORMAL)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id])
+  season Season @relation(fields: [seasonId], references: [id])
+
+  @@unique([userId, seasonId])
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  parentId  String?
+  createdAt DateTime @default(now())
+
+  parent    Category? @relation("CategoryTree", fields: [parentId], references: [id])
+  children  Category[] @relation("CategoryTree")
+  facts     Fact[]
+  questions Question[]
+  matches   Match[]
+  leaderboardEntries LeaderboardEntry[]
+}
+
+model Fact {
+  id           String   @id @default(cuid())
+  categoryId   String
+  entity       String
+  property     String
+  value        String
+  source       String?
+  confidence   Int      @default(80)
+  validFrom    DateTime?
+  validUntil   DateTime?
+  patchVersion String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  category  Category @relation(fields: [categoryId], references: [id])
+  questions Question[]
+  histories UserQuestionHistory[]
+}
+
+model Question {
+  id                String   @id @default(cuid())
+  factId            String
+  categoryId        String
+  difficultyLabel   QuestionDifficulty
+  difficultyScore   Float    @default(0.5)
+  questionType      String   @default("MULTIPLE_CHOICE")
+  questionText      String
+  answerOptionsJson Json
+  correctAnswerHash String
+  explanation       String?
+  status            QuestionStatus @default(DRAFT)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  fact      Fact @relation(fields: [factId], references: [id])
+  category  Category @relation(fields: [categoryId], references: [id])
+  matchQuestions MatchQuestion[]
+  histories UserQuestionHistory[]
+}
+
+model Match {
+  id                String   @id @default(cuid())
+  userId            String
+  seasonId          String
+  categoryId        String?
+  mode              String   @default("RANKED")
+  status            MatchStatus @default(IN_PROGRESS)
+  score             Int      @default(0)
+  performanceScore  Float    @default(0)
+  lpChange          Int      @default(0)
+  mmrChange         Int      @default(0)
+  accuracy          Float    @default(0)
+  suspiciousScore   Int      @default(0)
+  startedAt         DateTime @default(now())
+  endedAt           DateTime?
+
+  user      User @relation(fields: [userId], references: [id])
+  season    Season @relation(fields: [seasonId], references: [id])
+  category  Category? @relation(fields: [categoryId], references: [id])
+  questions MatchQuestion[]
+  antiCheatEvents AntiCheatEvent[]
+}
+
+model MatchQuestion {
+  id                  String   @id @default(cuid())
+  matchId             String
+  questionId          String
+  questionSentAt      DateTime @default(now())
+  answerReceivedAt    DateTime?
+  selectedAnswerHash  String?
+  isCorrect           Boolean?
+  responseTimeMs      Int?
+  pointsAwarded       Int      @default(0)
+  tokenNonce          String?
+  createdAt           DateTime @default(now())
+
+  match    Match @relation(fields: [matchId], references: [id])
+  question Question @relation(fields: [questionId], references: [id])
+
+  @@unique([matchId, questionId])
+}
+
+model UserQuestionHistory {
+  id                  String   @id @default(cuid())
+  userId              String
+  questionId          String
+  factId              String
+  seenAt              DateTime @default(now())
+  answeredCorrectly   Boolean?
+  responseTimeMs      Int?
+
+  user     User @relation(fields: [userId], references: [id])
+  question Question @relation(fields: [questionId], references: [id])
+  fact     Fact @relation(fields: [factId], references: [id])
+
+  @@index([userId, questionId])
+  @@index([userId, factId])
+}
+
+model AntiCheatEvent {
+  id          String   @id @default(cuid())
+  userId      String
+  matchId     String?
+  eventType   String
+  severity    Int
+  metadataJson Json?
+  createdAt   DateTime @default(now())
+
+  user  User @relation(fields: [userId], references: [id])
+  match Match? @relation(fields: [matchId], references: [id])
+}
+
+model LeaderboardEntry {
+  id             String @id @default(cuid())
+  seasonId       String
+  userId         String
+  categoryId     String?
+  rankPosition   Int?
+  rating         Int
+  lp             Int
+  verifiedStatus VerifiedStatus @default(NORMAL)
+  gamesPlayed    Int @default(0)
+  accuracy       Float @default(0)
+  updatedAt      DateTime @updatedAt
+
+  season   Season @relation(fields: [seasonId], references: [id])
+  user     User @relation(fields: [userId], references: [id])
+  category Category? @relation(fields: [categoryId], references: [id])
+
+  @@unique([seasonId, userId, categoryId])
+}
