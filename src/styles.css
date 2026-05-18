@@ -74,7 +74,7 @@ button {
 
 .hud {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 12px;
   margin-bottom: 24px;
 }
@@ -103,6 +103,17 @@ button {
 .hud strong {
   color: #fef08a;
   font-size: 1.35rem;
+}
+
+.timer-danger {
+  color: #f87171 !important;
+  animation: timer-blink 0.45s steps(2, end) infinite;
+}
+
+@keyframes timer-blink {
+  50% {
+    opacity: 0.25;
+  }
 }
 
 .question-card {
